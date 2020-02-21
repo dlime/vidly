@@ -104,20 +104,15 @@ export default class ShowMovies extends Component {
     this.setState({ sortColumn });
   };
 
-  render() {
+  getPagedData = () => {
     const {
       movies,
-      moviesCount,
       itemsPerPage,
       selectedPage,
       allGenresFilter,
       selectedFilter,
       sortColumn
     } = this.state;
-
-    if (moviesCount === 0) {
-      return <h2 className="lead">There are no movies in the database.</h2>;
-    }
 
     const filteredMovies = filterMovies(
       movies,
@@ -136,6 +131,26 @@ export default class ShowMovies extends Component {
     );
     const moviesToRender = paginate(sortedMovies, selectedPage, itemsPerPage);
 
+    return {
+      moviesToRender,
+      filteredMoviesCount: filteredMovies.length,
+      newPagesArray
+    };
+  };
+
+  render() {
+    const { moviesCount, selectedPage } = this.state;
+
+    if (moviesCount === 0) {
+      return <h2 className="lead">There are no movies in the database.</h2>;
+    }
+
+    const {
+      moviesToRender,
+      filteredMoviesCount,
+      newPagesArray
+    } = this.getPagedData();
+
     return (
       <main className="container">
         <div className="row">
@@ -149,7 +164,7 @@ export default class ShowMovies extends Component {
 
           <div className="col-sm">
             <h2 className="lead">
-              Showing {filteredMovies.length} movies in the database.
+              Showing {filteredMoviesCount} movies in the database.
             </h2>
             <MoviesTable
               moviesToRender={moviesToRender}

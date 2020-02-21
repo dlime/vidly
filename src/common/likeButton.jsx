@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 
 class LikeButton extends Component {
   getHeartIcon = liked => {
@@ -17,5 +18,10 @@ class LikeButton extends Component {
     );
   }
 }
+
+LikeButton.propTypes = {
+  liked: PropTypes.bool.isRequired,
+  onClick: PropTypes.func.isRequired
+};
 
 export default LikeButton;

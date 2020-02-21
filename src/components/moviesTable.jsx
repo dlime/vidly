@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import TableHeader from "./tableHeader";
-import TableBody from "./tableBody";
-import LikeButton from "./likeButton";
+import TableHeader from "../common/tableHeader";
+import TableBody from "../common/tableBody";
+import LikeButton from "../common/likeButton";
 
 class MoviesTable extends Component {
   columns = [

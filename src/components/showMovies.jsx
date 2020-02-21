@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { getMovies } from "../services/fakeMovieService";
 import MoviesTable from "./moviesTable";
-import Pagination from "./pagination";
+import Pagination from "../common/pagination";
 import _ from "lodash";
 import { paginate, filterMovies } from "../utils/paginate.js";
-import FilterListGroup from "./filterListGroup";
+import FilterListGroup from "../common/filterListGroup";
 import { getGenres } from "../services/fakeGenreService";
 
 export default class ShowMovies extends Component {

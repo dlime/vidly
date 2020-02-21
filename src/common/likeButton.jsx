@@ -1,23 +1,21 @@
-import React, { Component } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 
-class LikeButton extends Component {
-  getHeartIcon = liked => {
-    if (liked) {
-      return <i className="fa fa-heart" aria-hidden="true"></i>;
-    } else {
-      return <i className="fa fa-heart-o" aria-hidden="true"></i>;
-    }
-  };
-
-  render() {
-    return (
-      <button className="btn btn-primary-outline" onClick={this.props.onClick}>
-        {this.getHeartIcon(this.props.liked)}
-      </button>
-    );
+const getHeartIcon = liked => {
+  if (liked) {
+    return <i className="fa fa-heart" aria-hidden="true"></i>;
+  } else {
+    return <i className="fa fa-heart-o" aria-hidden="true"></i>;
   }
-}
+};
+
+const LikeButton = ({ onClick, liked }) => {
+  return (
+    <button className="btn btn-primary-outline" onClick={onClick}>
+      {getHeartIcon(liked)}
+    </button>
+  );
+};
 
 LikeButton.propTypes = {
   liked: PropTypes.bool.isRequired,

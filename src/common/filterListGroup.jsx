@@ -9,9 +9,7 @@ const getClass = (filter, selectedFilter) => {
   return classes;
 };
 
-const FilterListGroup = props => {
-  const { filtersArray, selectedFilter, onFilterClick } = props;
-
+const FilterListGroup = ({ filtersArray, selectedFilter, onFilterClick }) => {
   return (
     <ul className="list-group">
       {filtersArray.map(filter => {

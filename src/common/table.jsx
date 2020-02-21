@@ -1,9 +1,9 @@
-import React, { Component } from "react";
+import React from "react";
+import PropTypes from "prop-types";
 import TableHeader from "./tableHeader";
 import TableBody from "./tableBody";
 
-const Table = props => {
-  const { data, columns, onLike, onDelete, onSort, sortColumn } = props;
+const Table = ({ data, columns, onLike, onDelete, onSort, sortColumn }) => {
   return (
     <table className="table">
       <TableHeader columns={columns} sortColumn={sortColumn} onSort={onSort} />
@@ -15,6 +15,15 @@ const Table = props => {
       />
     </table>
   );
+};
+
+Table.propTypes = {
+  data: PropTypes.array.isRequired,
+  columns: PropTypes.array.isRequired,
+  onLike: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
+  onSort: PropTypes.func.isRequired,
+  sortColumn: PropTypes.object.isRequired
 };
 
 export default Table;

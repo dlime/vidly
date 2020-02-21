@@ -1,36 +1,31 @@
-import React, { Component } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import _ from "lodash";
 
-class TableBody extends Component {
-  renderCell = (item, column) => {
-    if (column.content) {
-      return column.content(item);
-    }
-    return _.get(item, column.path);
-  };
-
-  createKey = (item, column) => {
-    return item[this.props.dataKey] + (column.path || column.label);
-  };
-
-  render() {
-    const { data, dataKey, columns } = this.props;
-    return (
-      <tbody>
-        {data.map(item => (
-          <tr key={item[dataKey]}>
-            {columns.map(column => (
-              <td key={this.createKey(item, column)}>
-                {this.renderCell(item, column)}
-              </td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
-    );
+const renderCell = (item, column) => {
+  if (column.content) {
+    return column.content(item);
   }
-}
+  return _.get(item, column.path);
+};
+
+const createKey = (item, column, dataKey) => {
+  return item[dataKey] + (column.path || column.label);
+};
+
+const TableBody = ({ data, dataKey, columns }) => {
+  return (
+    <tbody>
+      {data.map(item => (
+        <tr key={item[dataKey]}>
+          {columns.map(column => (
+            <td key={createKey(item, column)}>{renderCell(item, column)}</td>
+          ))}
+        </tr>
+      ))}
+    </tbody>
+  );
+};
 
 TableBody.defaultProps = {
   dataKey: "_id"

@@ -51,19 +51,11 @@ export default class ShowMovies extends Component {
     allGenresFilter: "All Genres",
     selectedFilter: "",
 
-    sortColumn: { column: "title", order: "asc" }
+    sortColumn: { path: "title", order: "asc" }
   };
 
   getPagesNumber = moviesCount => {
     return Math.ceil(moviesCount / this.state.itemsPerPage);
-  };
-
-  getMoviesCountString = moviesCount => {
-    if (moviesCount === 0) {
-      return "There are no movies in the database.";
-    } else {
-      return `Showing ${moviesCount} movies in the database.`;
-    }
   };
 
   handleDeleteButton = id => {
@@ -124,7 +116,7 @@ export default class ShowMovies extends Component {
     } = this.state;
 
     if (moviesCount === 0) {
-      return <h2 className="lead">{this.getMoviesCountString(moviesCount)}</h2>;
+      return <h2 className="lead">There are no movies in the database.</h2>;
     }
 
     const filteredMovies = filterMovies(
@@ -137,10 +129,11 @@ export default class ShowMovies extends Component {
       Math.ceil(filteredMovies.length / this.state.itemsPerPage) + 1
     );
 
-    const sortedMovies = _(filteredMovies)
-      .sortBy(sortColumn.column, sortColumn.order)
-      .value();
-
+    const sortedMovies = _.orderBy(
+      filteredMovies,
+      [sortColumn.path],
+      [sortColumn.order]
+    );
     const moviesToRender = paginate(sortedMovies, selectedPage, itemsPerPage);
 
     return (
@@ -156,7 +149,7 @@ export default class ShowMovies extends Component {
 
           <div className="col-sm">
             <h2 className="lead">
-              {this.getMoviesCountString(moviesToRender.length)}
+              Showing {filteredMovies.length} movies in the database.
             </h2>
             <MoviesTable
               moviesToRender={moviesToRender}

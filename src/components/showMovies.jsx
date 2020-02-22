@@ -152,35 +152,33 @@ export default class ShowMovies extends Component {
     } = this.getPagedData();
 
     return (
-      <main className="container">
-        <div className="row">
-          <div className="col-sm">
-            <FilterListGroup
-              filtersArray={this.state.filtersArray}
-              selectedFilter={this.state.selectedFilter}
-              onFilterClick={this.handleFilterClick}
-            />
-          </div>
-
-          <div className="col-sm">
-            <h2 className="lead">
-              Showing {filteredMoviesCount} movies in the database.
-            </h2>
-            <MoviesTable
-              moviesToRender={moviesToRender}
-              onLike={this.handleLiked}
-              onDelete={this.handleDeleteButton}
-              onSort={this.handleSortClick}
-              sortColumn={this.state.sortColumn}
-            />
-            <Pagination
-              pagesArray={newPagesArray}
-              selectedPage={selectedPage}
-              onPageClick={this.handlePageClick}
-            />
-          </div>
+      <div className="row">
+        <div className="col-3">
+          <FilterListGroup
+            filtersArray={this.state.filtersArray}
+            selectedFilter={this.state.selectedFilter}
+            onFilterClick={this.handleFilterClick}
+          />
         </div>
-      </main>
+
+        <div className="col">
+          <h2 className="lead">
+            Showing {filteredMoviesCount} movies in the database.
+          </h2>
+          <MoviesTable
+            moviesToRender={moviesToRender}
+            onLike={this.handleLiked}
+            onDelete={this.handleDeleteButton}
+            onSort={this.handleSortClick}
+            sortColumn={this.state.sortColumn}
+          />
+          <Pagination
+            pagesArray={newPagesArray}
+            selectedPage={selectedPage}
+            onPageClick={this.handlePageClick}
+          />
+        </div>
+      </div>
     );
   }
 }

@@ -4,8 +4,11 @@ import _ from "lodash";
 
 const renderCell = (item, column) => {
   if (column.content) {
+    // this is to render cells with components instead of just labels
     return column.content(item);
   }
+
+  // render simple label cells
   return _.get(item, column.path);
 };
 

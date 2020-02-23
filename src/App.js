@@ -1,11 +1,12 @@
-import "./App.css";
 import React, { Component } from "react";
-import ShowMovies from "./components/showMovies";
 import { Switch, Route, Redirect } from "react-router-dom";
+import ShowMovies from "./components/showMovies";
 import NavBar from "./components/navBar";
 import NotFound from "./common/notFound";
 import Rentals from "./components/rentals";
 import Customers from "./components/customers";
+import MovieForm from "./components/movieForm";
+import "./App.css";
 
 class App extends Component {
   state = {};
@@ -19,9 +20,10 @@ class App extends Component {
             <Route path="/customers" component={Customers} />
             <Route path="/rentals" component={Rentals} />
             <Route path="/not-found" component={NotFound} />
+            <Route path="/movies/:id" component={MovieForm} />
             <Route path="/movies" component={ShowMovies} />
             <Redirect from="/" exact to="/movies" />
-            <Redirect from="" to="/not-found" />
+            <Redirect to="/not-found" />
           </Switch>
         </main>
       </React.Fragment>

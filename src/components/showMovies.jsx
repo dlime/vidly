@@ -1,11 +1,11 @@
 import React, { Component } from "react";
+import _ from "lodash";
 import { getMovies } from "../services/fakeMovieService";
+import { getGenres } from "../services/fakeGenreService";
 import MoviesTable from "./moviesTable";
 import Pagination from "../common/pagination";
-import _ from "lodash";
-import { paginate, filterMovies } from "../utils/paginate.js";
 import FilterListGroup from "../common/filterListGroup";
-import { getGenres } from "../services/fakeGenreService";
+import { paginate, filterMovies } from "../utils/paginate.js";
 
 export default class ShowMovies extends Component {
   // this is where server calls should be placed (not constructor)

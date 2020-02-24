@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import InputForm from "../common/inputForm";
+import Joi from "joi-browser";
 
 class LoginForm extends Component {
   // use it as single source of truth (do not keep states in forms)
@@ -10,25 +11,39 @@ class LoginForm extends Component {
     errors: {}
   };
 
+  // not stored in the state since it will not change during time
+  schema = {
+    username: Joi.string()
+      .required()
+      .label("Username"),
+    password: Joi.string()
+      .required()
+      .label("Password")
+  };
+
   // minimize use of refs from DOM in react
   // example use case: focus of elements, animations, 3rd party DOM elements
   //   username = React.createRef();
-
   //   componentDidMount() {
   //     this.username.current.focus();
   //   }
 
   validate = () => {
+    const validateOptions = { abortEarly: false };
+    const { error } = Joi.validate(
+      this.state.account,
+      this.schema,
+      validateOptions
+    );
+
+    if (!error) return null;
+
     const errors = {};
-    const { username, password } = this.state.account;
-    if (username.trim() === "") {
-      errors.username = "Username is required";
-    }
-    if (password.trim() === "") {
-      errors.password = "Password is required";
+    for (let errorItem of error.details) {
+      errors[errorItem.path[0]] = errorItem.message;
     }
 
-    return Object.keys(errors).length === 0 ? null : errors;
+    return errors;
   };
 
   handleSubmit = e => {
@@ -41,10 +56,11 @@ class LoginForm extends Component {
     // const username = document.getElementById('username').value
     // if username ...
 
-    // way to use dom with react:
+    // a way to use dom with react:
     // (never work with document/dom directly on react, since there's a virtual and real)
     // const usernameFromDom = this.username.current.value;
 
+    // correct way to validate form input in React:
     const errors = this.validate();
     this.setState({ errors });
     if (errors) {
@@ -55,19 +71,18 @@ class LoginForm extends Component {
     // console.log("submitted");
   };
 
-  validateField = ({ name, value }) => {
-    if (name === "username") {
-      if (value.trim() === "") return "Username is required";
-    }
+  validateSingleField = ({ name, value }) => {
+    const objectToValidate = { [name]: value };
+    const validationSchema = { [name]: this.schema[name] };
 
-    if (name === "password") {
-      if (value.trim() === "") return "Password is required";
-    }
+    // abort early, we only want to show 1 error message per time
+    const { error: result } = Joi.validate(objectToValidate, validationSchema);
+    return result ? result.details[0].message : null;
   };
 
   handleFormChange = ({ currentTarget: input }) => {
     const errors = { ...this.state.errors };
-    const errorMessage = this.validateField(input);
+    const errorMessage = this.validateSingleField(input);
     if (errorMessage) {
       errors[input.name] = errorMessage;
     } else {
@@ -98,7 +113,11 @@ class LoginForm extends Component {
             error={errors && errors.password}
             onChange={this.handleFormChange}
           />
-          <button type="submit" className="btn btn-primary">
+          <button
+            type="submit"
+            className="btn btn-primary"
+            disabled={this.validate()}
+          >
             Submit
           </button>
         </form>

@@ -6,6 +6,7 @@ import MoviesTable from "./moviesTable";
 import Pagination from "../common/pagination";
 import FilterListGroup from "../common/filterListGroup";
 import { paginate, filterMovies } from "../utils/paginate.js";
+import { Link } from "react-router-dom";
 
 export default class ShowMovies extends Component {
   // this is where server calls should be placed (not constructor)
@@ -162,6 +163,9 @@ export default class ShowMovies extends Component {
         </div>
 
         <div className="col">
+          <Link to="/movies/new">
+            <button className="btn btn-primary navbar">New Movie</button>
+          </Link>
           <h2 className="lead">
             Showing {filteredMoviesCount} movies in the database.
           </h2>

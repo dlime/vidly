@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Joi from "joi-browser";
+import Joi from "@hapi/joi";
 import InputForm from "./inputForm";
 
 class Form extends Component {
@@ -27,11 +27,7 @@ class Form extends Component {
 
   validate = () => {
     const validateOptions = { abortEarly: false };
-    const { error } = Joi.validate(
-      this.state.data,
-      this.schema,
-      validateOptions
-    );
+    const { error } = this.schema.validate(this.state.data, validateOptions);
 
     if (!error) return null;
 
@@ -70,11 +66,13 @@ class Form extends Component {
 
   validateSingleField = ({ name, value }) => {
     const objectToValidate = { [name]: value };
-    const validationSchema = { [name]: this.schema[name] };
+    const validationSchema = Joi.object({
+      [name]: this.schema._ids._byKey.get(name).schema
+    });
 
     // abort early, we only want to show 1 error message per time
-    const { error: result } = Joi.validate(objectToValidate, validationSchema);
-    return result ? result.details[0].message : null;
+    const { error } = validationSchema.validate(objectToValidate);
+    return error ? error.details[0].message : null;
   };
 
   handleFormChange = ({ currentTarget: input }) => {

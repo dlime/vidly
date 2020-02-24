@@ -1,15 +1,15 @@
 import Form from "../common/form";
-import Joi from "joi-browser";
+import Joi from "@hapi/joi";
 
 class RegisterForm extends Form {
   state = {
     data: { username: "", password: "", name: "" }
   };
 
-  schema = {
+  schema = Joi.object({
     username: Joi.string()
+      .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
       .required()
-      .email()
       .label("Username"),
     password: Joi.string()
       .required()
@@ -18,7 +18,7 @@ class RegisterForm extends Form {
     name: Joi.string()
       .required()
       .label("Name")
-  };
+  });
 
   formTitle = "Register";
   forms = ["username", "password", "name"];

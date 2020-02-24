@@ -1,5 +1,5 @@
-import Joi from "joi-browser";
 import Form from "../common/form";
+import Joi from "@hapi/joi";
 
 class LoginForm extends Form {
   state = {

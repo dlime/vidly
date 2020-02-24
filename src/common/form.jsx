@@ -113,7 +113,7 @@ class Form extends Component {
             className="btn btn-primary"
             disabled={this.validate()}
           >
-            Submit
+            {this.formTitle}
           </button>
         </form>
       </React.Fragment>

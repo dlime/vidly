@@ -22,9 +22,6 @@ class Form extends Component {
   // not stored in the state since it will not change during time
   schema = {};
 
-  formTitle = "";
-  forms = [];
-
   validate = () => {
     const validateOptions = { abortEarly: false };
     const { error } = this.schema.validate(this.state.data, validateOptions);
@@ -89,34 +86,52 @@ class Form extends Component {
     this.setState({ data, errors });
   };
 
-  render() {
+  renderSubmitButton = label => {
+    return (
+      <button
+        type="submit"
+        className="btn btn-primary"
+        disabled={this.validate()}
+      >
+        {label}
+      </button>
+    );
+  };
+
+  renderInput = formName => {
     const { data, errors } = this.state;
     return (
-      <React.Fragment>
-        <h1>{this.formTitle}</h1>
-        <form onSubmit={this.handleSubmit}>
-          {this.forms.map(formName => {
-            return (
-              <InputForm
-                key={formName}
-                label={formName}
-                value={data[formName]}
-                error={errors && errors[formName]}
-                onChange={this.handleFormChange}
-              />
-            );
-          })}
-          <button
-            type="submit"
-            className="btn btn-primary"
-            disabled={this.validate()}
-          >
-            {this.formTitle}
-          </button>
-        </form>
-      </React.Fragment>
+      <InputForm
+        key={formName}
+        label={formName}
+        value={data[formName]}
+        error={errors && errors[formName]}
+        onChange={this.handleFormChange}
+      />
     );
-  }
+  };
+
+  // render() {
+  //   const { data, errors } = this.state;
+  //   return (
+  //     <React.Fragment>
+  //       <h1>{this.formTitle}</h1>
+  //       <form onSubmit={this.handleSubmit}>
+  //         {this.forms.map(formName => {
+  //           return (
+  //             <InputForm
+  //               key={formName}
+  //               label={formName}
+  //               value={data[formName]}
+  //               error={errors && errors[formName]}
+  //               onChange={this.handleFormChange}
+  //             />
+  //           );
+  //         })}
+  //       </form>
+  //     </React.Fragment>
+  //   );
+  // }
 }
 
 export default Form;

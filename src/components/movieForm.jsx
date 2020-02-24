@@ -4,7 +4,7 @@ import Joi from "@hapi/joi";
 
 class MovieForm extends Form {
   state = {
-    data: { title: "", genre: [], stock: "", rate: "" }
+    data: { title: "", stock: "", rate: "" }
   };
 
   schema = {
@@ -15,11 +15,17 @@ class MovieForm extends Form {
       .integer()
       .min(0)
       .required()
-      .label("Stock")
+      .label("Stock"),
+    rate: Joi.number()
+      .integer()
+      .min(0)
+      .max(10)
+      .required()
+      .label("Rate")
   };
 
   formTitle = "Movie Form";
-  forms = ["title", "genre", "Stock", "Rate"];
+  forms = ["title", "Stock", "Rate"];
 
   render() {
     const { match, history } = this.props;

@@ -1,5 +1,6 @@
 import Form from "../common/form";
 import Joi from "@hapi/joi";
+import React from "react";
 
 class RegisterForm extends Form {
   state = {
@@ -20,8 +21,19 @@ class RegisterForm extends Form {
       .label("Name")
   });
 
-  formTitle = "Register";
-  forms = ["username", "password", "name"];
+  render() {
+    return (
+      <React.Fragment>
+        <h1>Register</h1>
+        <form onSubmit={this.handleSubmit}>
+          {this.renderInput("username")}
+          {this.renderInput("password")}
+          {this.renderInput("name")}
+          {this.renderSubmitButton("Register")}
+        </form>
+      </React.Fragment>
+    );
+  }
 }
 
 export default RegisterForm;

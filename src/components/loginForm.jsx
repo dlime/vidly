@@ -16,6 +16,11 @@ class LoginForm extends Form {
       .label("Password")
   });
 
+  doSubmit = () => {
+    // call the server to save and show another page
+    console.log("Login Submitted");
+  };
+
   render() {
     return (
       <React.Fragment>

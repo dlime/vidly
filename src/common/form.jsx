@@ -33,6 +33,8 @@ class Form extends Component {
       errors[errorItem.path[0]] = errorItem.message;
     }
 
+    console.log(errors);
+
     return errors;
   };
 
@@ -57,8 +59,7 @@ class Form extends Component {
       return;
     }
 
-    // call the server to save and show another page
-    // console.log("submitted");
+    this.doSubmit();
   };
 
   validateSingleField = ({ name, value }) => {
@@ -102,7 +103,6 @@ class Form extends Component {
     const { data, errors } = this.state;
     return (
       <InputForm
-        key={formName}
         label={formName}
         value={data[formName]}
         error={errors && errors[formName]}
@@ -110,28 +110,6 @@ class Form extends Component {
       />
     );
   };
-
-  // render() {
-  //   const { data, errors } = this.state;
-  //   return (
-  //     <React.Fragment>
-  //       <h1>{this.formTitle}</h1>
-  //       <form onSubmit={this.handleSubmit}>
-  //         {this.forms.map(formName => {
-  //           return (
-  //             <InputForm
-  //               key={formName}
-  //               label={formName}
-  //               value={data[formName]}
-  //               error={errors && errors[formName]}
-  //               onChange={this.handleFormChange}
-  //             />
-  //           );
-  //         })}
-  //       </form>
-  //     </React.Fragment>
-  //   );
-  // }
 }
 
 export default Form;

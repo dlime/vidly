@@ -21,14 +21,19 @@ class RegisterForm extends Form {
       .label("Name")
   });
 
+  doSubmit = () => {
+    // call the server to save and show another page
+    console.log("Register Submitted");
+  };
+
   render() {
     return (
       <React.Fragment>
         <h1>Register</h1>
         <form onSubmit={this.handleSubmit}>
-          {this.renderInput("username")}
-          {this.renderInput("password")}
-          {this.renderInput("name")}
+          {this.renderInput("username", "Username")}
+          {this.renderInput("password", "Password")}
+          {this.renderInput("name", "Name")}
           {this.renderSubmitButton("Register")}
         </form>
       </React.Fragment>

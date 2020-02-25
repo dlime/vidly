@@ -3,6 +3,7 @@ import _ from "lodash";
 import { getMovies } from "../services/fakeMovieService";
 import { getGenres } from "../services/fakeGenreService";
 import MoviesTable from "./moviesTable";
+import SearchBox from "./searchBox";
 import Pagination from "../common/pagination";
 import FilterListGroup from "../common/filterListGroup";
 import { paginate, filterMovies } from "../utils/paginate.js";
@@ -50,7 +51,9 @@ export default class ShowMovies extends Component {
 
     filtersArray: [],
     allGenresFilter: "All Genres",
-    selectedFilter: "",
+    selectedFilter: null,
+
+    searchQuery: "",
 
     sortColumn: { path: "title", order: "asc" }
   };
@@ -98,11 +101,19 @@ export default class ShowMovies extends Component {
   };
 
   handleFilterClick = selectedFilter => {
-    this.setState({ selectedFilter, selectedPage: 1 });
+    this.setState({ selectedFilter, selectedPage: 1, searchQuery: "" });
   };
 
   handleSortClick = sortColumn => {
     this.setState({ sortColumn });
+  };
+
+  handleSearch = query => {
+    this.setState({
+      searchQuery: query,
+      selectedFilter: null,
+      selectedPage: 1
+    });
   };
 
   getPagedData = () => {
@@ -112,14 +123,18 @@ export default class ShowMovies extends Component {
       selectedPage,
       allGenresFilter,
       selectedFilter,
-      sortColumn
+      sortColumn,
+      searchQuery
     } = this.state;
 
-    const filteredMovies = filterMovies(
-      movies,
-      allGenresFilter,
-      selectedFilter
-    );
+    let filteredMovies = movies;
+    if (searchQuery) {
+      filteredMovies = movies.filter(movie =>
+        movie.title.toLowerCase().startsWith(searchQuery.toLowerCase())
+      );
+    } else if (selectedFilter) {
+      filteredMovies = filterMovies(movies, allGenresFilter, selectedFilter);
+    }
     const newPagesArray = _.range(
       1,
       Math.ceil(filteredMovies.length / this.state.itemsPerPage) + 1
@@ -140,7 +155,7 @@ export default class ShowMovies extends Component {
   };
 
   render() {
-    const { moviesCount, selectedPage } = this.state;
+    const { moviesCount, selectedPage, searchQuery } = this.state;
 
     if (moviesCount === 0) {
       return <h2 className="lead">There are no movies in the database.</h2>;
@@ -169,6 +184,7 @@ export default class ShowMovies extends Component {
           <h2 className="lead">
             Showing {filteredMoviesCount} movies in the database.
           </h2>
+          <SearchBox value={searchQuery} onChange={this.handleSearch} />
           <MoviesTable
             moviesToRender={moviesToRender}
             onLike={this.handleLiked}

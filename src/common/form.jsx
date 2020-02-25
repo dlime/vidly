@@ -33,8 +33,6 @@ class Form extends Component {
       errors[errorItem.path[0]] = errorItem.message;
     }
 
-    console.log(errors);
-
     return errors;
   };
 

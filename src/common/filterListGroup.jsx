@@ -33,7 +33,7 @@ const FilterListGroup = ({ filtersArray, selectedFilter, onFilterClick }) => {
 // };
 
 FilterListGroup.propTypes = {
-  selectedFilter: PropTypes.string.isRequired,
+  selectedFilter: PropTypes.string,
   filtersArray: PropTypes.arrayOf(PropTypes.string).isRequired,
   onFilterClick: PropTypes.func.isRequired
   // valueProperty: PropTypes.string.isRequired,

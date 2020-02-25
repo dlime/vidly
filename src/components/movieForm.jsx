@@ -1,33 +1,39 @@
 import React from "react";
 import Form from "../common/form";
 import Joi from "@hapi/joi";
-import _ from "lodash";
-import { getMovie, saveMovie } from "../services/fakeMovieService";
-import { getGenres } from "../services/fakeGenreService";
+import { getMovie, saveMovie } from "../services/movieService";
+import { getGenres } from "../services/genreService";
 
 class MovieForm extends Form {
-  componentDidMount() {
-    const genres = getGenres();
+  async populateGenres() {
+    const { data: genres } = await getGenres();
     this.setState({ genres });
+  }
 
+  async populateMovies() {
     const { match } = this.props;
     if (match.params.id !== "new") {
-      const movie = getMovie(match.params.id);
-
-      if (!movie) {
-        // use replace, so that back button won't be back in an infinite loop
-        return this.props.history.replace("/not-found");
+      try {
+        const { data: movie } = await getMovie(match.params.id);
+        const data = {
+          _id: movie._id,
+          title: movie.title,
+          genreId: movie.genre._id,
+          numberInStock: movie.numberInStock,
+          dailyRentalRate: movie.dailyRentalRate
+        };
+        this.setState({ data });
+      } catch (error) {
+        if (error.response && error.response.status === 404)
+          // use replace, so that back button won't be back in an infinite loop
+          this.props.history.replace("/not-found");
       }
-
-      const data = {
-        _id: movie._id,
-        title: movie.title,
-        genreId: movie.genre._id,
-        numberInStock: movie.numberInStock,
-        dailyRentalRate: movie.dailyRentalRate
-      };
-      this.setState({ data });
     }
+  }
+
+  async componentDidMount() {
+    await this.populateGenres();
+    await this.populateMovies();
   }
 
   state = {
@@ -59,9 +65,13 @@ class MovieForm extends Form {
       .label("Rate")
   });
 
-  doSubmit = () => {
+  doSubmit = async () => {
     let movie = { ...this.state.data };
-    saveMovie(movie);
+    try {
+      await saveMovie(movie);
+    } catch (error) {
+      console.log("error while saving");
+    }
 
     this.props.history.push("/movies");
   };
@@ -98,7 +108,6 @@ class MovieForm extends Form {
   render() {
     const { match } = this.props;
     const { data, genres } = this.state;
-
     return (
       <React.Fragment>
         <h1>Movie Form {match.params.id !== "new" ? match.params.id : ""}</h1>

@@ -1,18 +1,20 @@
 import React, { Component } from "react";
 import _ from "lodash";
-import { getMovies } from "../services/fakeMovieService";
-import { getGenres } from "../services/fakeGenreService";
+import { getMovies, deleteMovie } from "../services/movieService";
+import { getGenres } from "../services/genreService";
 import MoviesTable from "./moviesTable";
 import SearchBox from "./searchBox";
 import Pagination from "../common/pagination";
 import FilterListGroup from "../common/filterListGroup";
 import { paginate, filterMovies } from "../utils/paginate.js";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default class ShowMovies extends Component {
-  // this is where server calls should be placed (not constructor)
-  componentDidMount() {
-    const movies = getMovies().map(movie => {
+  // this is where server calls should be placed (not in constructor)
+  async componentDidMount() {
+    const { data } = await getMovies();
+    const movies = data.map(movie => {
       const pair = { liked: false };
       return { ...movie, ...pair };
     });
@@ -21,9 +23,10 @@ export default class ShowMovies extends Component {
     const pagesArray = _.range(1, this.getPagesNumber(moviesCount) + 1);
     const selectedPage = pagesArray[0];
 
+    const { data: genres } = await getGenres();
     const filtersArray = [
       this.state.allGenresFilter,
-      ...getGenres().map(genre => {
+      ...genres.map(genre => {
         return genre.name;
       })
     ];
@@ -62,17 +65,22 @@ export default class ShowMovies extends Component {
     return Math.ceil(moviesCount / this.state.itemsPerPage);
   };
 
-  handleDeleteButton = id => {
-    const newMovies = this.state.movies.filter(movie => {
+  handleDeleteButton = async id => {
+    const { movies, selectedPage, pagesArray, itemsPerPage } = this.state;
+    const originalPagesArray = pagesArray;
+    const originalMovies = movies;
+
+    const newMovies = originalMovies.filter(movie => {
       return movie._id !== id;
     });
 
     const newPagesArray = _.range(
       1,
-      Math.ceil(newMovies.length / this.state.itemsPerPage) + 1
+      Math.ceil(newMovies.length / itemsPerPage) + 1
     );
 
-    let newSelectedPage = this.state.selectedPage;
+    const originalSelectedPage = selectedPage;
+    let newSelectedPage = originalSelectedPage;
     if (newSelectedPage > newPagesArray.length) {
       newSelectedPage = newPagesArray.length;
     }
@@ -83,6 +91,21 @@ export default class ShowMovies extends Component {
       pagesArray: newPagesArray,
       selectedPage: newSelectedPage
     });
+
+    try {
+      await deleteMovie(id);
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        toast.error("This movies has already been deleted");
+      }
+
+      this.setState({
+        movies: originalMovies,
+        moviesCount: originalMovies.length,
+        pagesArray: originalPagesArray,
+        selectedPage: originalSelectedPage
+      });
+    }
   };
 
   handleLiked = id => {

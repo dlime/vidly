@@ -1,6 +1,7 @@
 import Form from "../common/form";
 import Joi from "@hapi/joi";
 import React from "react";
+import { saveUser } from "../services/userService";
 
 class RegisterForm extends Form {
   state = {
@@ -21,9 +22,24 @@ class RegisterForm extends Form {
       .label("Name")
   });
 
-  doSubmit = () => {
-    // call the server to save and show another page
-    console.log("Register Submitted");
+  doSubmit = async () => {
+    try {
+      const response = await saveUser(this.state.data);
+      localStorage.setItem("token", response.headers["x-auth-token"]);
+    } catch (error) {
+      if (error.response && error.response.status === 400) {
+        const errors = { ...this.state.errors };
+        errors.username = error.response.data;
+        this.setState({ errors });
+      }
+      return;
+    }
+
+    // this.props.history.replace("/");
+
+    // Reload the page so that JWT is going to be taken
+    // in App componentDidMount
+    window.location = "/";
   };
 
   render() {

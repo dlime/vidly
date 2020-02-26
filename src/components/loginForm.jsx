@@ -1,6 +1,7 @@
 import Form from "../common/form";
 import Joi from "@hapi/joi";
 import React from "react";
+import { login } from "../services/authService";
 
 class LoginForm extends Form {
   state = {
@@ -16,9 +17,25 @@ class LoginForm extends Form {
       .label("Password")
   });
 
-  doSubmit = () => {
-    // call the server to save and show another page
-    console.log("Login Submitted");
+  doSubmit = async () => {
+    try {
+      const { data: jsonWebToken } = await login(this.state.data);
+      localStorage.setItem("token", jsonWebToken);
+    } catch (error) {
+      if (error.response && error.response.status === 400) {
+        const errors = { ...this.state.errors };
+        errors.username = error.response.data;
+
+        this.setState({ errors });
+      }
+      return;
+    }
+
+    // this.props.history.replace("/");
+
+    // Reload the page so that JWT is going to be taken
+    // in App componentDidMount
+    window.location = "/";
   };
 
   render() {

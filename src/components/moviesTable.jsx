@@ -2,8 +2,14 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import Table from "../common/table";
 import LikeButton from "../common/likeButton";
+import auth from "../services/authService";
 
 class MoviesTable extends Component {
+  isAdmin = () => {
+    const user = auth.getCurrentUser();
+    return user && user.isAdmin;
+  };
+
   columns = [
     {
       path: "title",
@@ -24,14 +30,17 @@ class MoviesTable extends Component {
     },
     {
       path: "delete",
-      content: movie => (
-        <button
-          onClick={() => this.props.onDelete(movie._id)}
-          className="btn btn-danger btn-s"
-        >
-          Delete
-        </button>
-      )
+      content: movie => {
+        if (this.isAdmin())
+          return (
+            <button
+              onClick={() => this.props.onDelete(movie._id)}
+              className="btn btn-danger btn-s"
+            >
+              Delete
+            </button>
+          );
+      }
     }
   ];
 

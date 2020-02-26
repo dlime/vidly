@@ -2,6 +2,7 @@ import Form from "../common/form";
 import Joi from "@hapi/joi";
 import React from "react";
 import auth from "../services/authService";
+import { Redirect } from "react-router-dom";
 
 class LoginForm extends Form {
   state = {
@@ -34,10 +35,15 @@ class LoginForm extends Form {
 
     // Reload the page so that JWT is going to be taken
     // in App componentDidMount
-    window.location = "/";
+    const { state } = this.props.location;
+    window.location = state ? state.from.pathname : "/";
   };
 
   render() {
+    if (auth.getCurrentUser()) {
+      return <Redirect to="/" />;
+    }
+
     return (
       <React.Fragment>
         <h1>Login</h1>

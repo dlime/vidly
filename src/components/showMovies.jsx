@@ -179,6 +179,7 @@ export default class ShowMovies extends Component {
 
   render() {
     const { moviesCount, selectedPage, searchQuery } = this.state;
+    const { user } = this.props;
 
     if (moviesCount === 0) {
       return <h2 className="lead">There are no movies in the database.</h2>;
@@ -201,9 +202,11 @@ export default class ShowMovies extends Component {
         </div>
 
         <div className="col">
-          <Link to="/movies/new">
-            <button className="btn btn-primary navbar">New Movie</button>
-          </Link>
+          {user && (
+            <Link to="/movies/new">
+              <button className="btn btn-primary navbar">New Movie</button>
+            </Link>
+          )}
           <h2 className="lead">
             Showing {filteredMoviesCount} movies in the database.
           </h2>

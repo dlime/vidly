@@ -3,6 +3,7 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import ShowMovies from "./components/showMovies";
 import NavBar from "./components/navBar";
+import ProtectedRoute from "./common/protectedRoute";
 import NotFound from "./common/notFound";
 import Logout from "./common/logout";
 import Rentals from "./components/rentals";
@@ -27,10 +28,11 @@ class App extends Component {
   }
 
   render() {
+    const { currentUser } = this.state;
     return (
       <React.Fragment>
         <ToastContainer />
-        <NavBar user={this.state.currentUser} />
+        <NavBar user={currentUser} />
         <main className="container">
           <Switch>
             <Route path="/logout" component={Logout} />
@@ -38,8 +40,11 @@ class App extends Component {
             <Route path="/customers" component={Customers} />
             <Route path="/rentals" component={Rentals} />
             <Route path="/not-found" component={NotFound} />
-            <Route path="/movies/:id" component={MovieForm} />
-            <Route path="/movies" component={ShowMovies} />
+            <ProtectedRoute path="/movies/:id" component={MovieForm} />
+            <Route
+              path="/movies"
+              render={props => <ShowMovies {...props} user={currentUser} />}
+            />
             <Route path="/register" component={RegisterForm} />
             <Redirect from="/" exact to="/movies" />
             <Redirect to="/not-found" />

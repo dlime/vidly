@@ -2,6 +2,7 @@ import Form from "../common/form";
 import Joi from "@hapi/joi";
 import React from "react";
 import { saveUser } from "../services/userService";
+import auth from "../services/authService";
 
 class RegisterForm extends Form {
   state = {
@@ -25,7 +26,7 @@ class RegisterForm extends Form {
   doSubmit = async () => {
     try {
       const response = await saveUser(this.state.data);
-      localStorage.setItem("token", response.headers["x-auth-token"]);
+      auth.loginJsonWithWebToken(response.headers["x-auth-token"]);
     } catch (error) {
       if (error.response && error.response.status === 400) {
         const errors = { ...this.state.errors };

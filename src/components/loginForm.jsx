@@ -1,7 +1,7 @@
 import Form from "../common/form";
 import Joi from "@hapi/joi";
 import React from "react";
-import { login } from "../services/authService";
+import auth from "../services/authService";
 
 class LoginForm extends Form {
   state = {
@@ -19,8 +19,7 @@ class LoginForm extends Form {
 
   doSubmit = async () => {
     try {
-      const { data: jsonWebToken } = await login(this.state.data);
-      localStorage.setItem("token", jsonWebToken);
+      await auth.login(this.state.data);
     } catch (error) {
       if (error.response && error.response.status === 400) {
         const errors = { ...this.state.errors };

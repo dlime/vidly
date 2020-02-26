@@ -3,6 +3,7 @@ import Form from "../common/form";
 import Joi from "@hapi/joi";
 import { getMovie, saveMovie } from "../services/movieService";
 import { getGenres } from "../services/genreService";
+import { toast } from "react-toastify";
 
 class MovieForm extends Form {
   async populateGenres() {
@@ -50,6 +51,7 @@ class MovieForm extends Form {
   schema = Joi.object({
     _id: Joi.optional(),
     title: Joi.string()
+      .min(5)
       .required()
       .label("Title"),
     genreId: Joi.string().required(),
@@ -70,7 +72,10 @@ class MovieForm extends Form {
     try {
       await saveMovie(movie);
     } catch (error) {
-      console.log("error while saving");
+      if (error.response && error.response.status === 400) {
+        toast.error("Error while saving movie. " + error.response.data);
+        return;
+      }
     }
 
     this.props.history.push("/movies");

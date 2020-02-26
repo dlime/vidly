@@ -20,14 +20,13 @@ export function deleteMovie(id) {
 }
 
 export function saveMovie(movie) {
-  if (movie._id !== "") {
-    console.log(movie._id);
-    const movieWithoutId = { ...movie };
-    delete movieWithoutId._id;
-    return httpService.put(toMovieUrl(movie._id), movieWithoutId);
+  const movieWithoutId = { ...movie };
+  delete movieWithoutId._id;
+
+  // New movies have empty _id
+  if (movie._id === "") {
+    return httpService.post(apiEndpoint, movieWithoutId);
   }
 
-  const movieWithoutId = { ...movie };
-  movieWithoutId._id = null;
-  return httpService.post(apiEndpoint, movieWithoutId);
+  return httpService.put(toMovieUrl(movie._id), movieWithoutId);
 }

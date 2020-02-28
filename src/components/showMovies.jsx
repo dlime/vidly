@@ -181,10 +181,6 @@ export default class ShowMovies extends Component {
     const { moviesCount, selectedPage, searchQuery } = this.state;
     const { user } = this.props;
 
-    if (moviesCount === 0) {
-      return <h2 className="lead">There are no movies in the database.</h2>;
-    }
-
     const {
       moviesToRender,
       filteredMoviesCount,

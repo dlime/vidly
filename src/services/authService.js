@@ -1,8 +1,7 @@
 import httpService from "./httpService";
-import { apiUrl } from "../config.json";
 import jwtDecode from "jwt-decode";
 
-const apiEndpoint = apiUrl + "/auth";
+const apiEndpoint = "/auth";
 
 function set(jsonWebToken) {
   localStorage.setItem("token", jsonWebToken);

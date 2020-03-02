@@ -23,9 +23,12 @@ const Pagination = ({ pagesArray, onPageClick, selectedPage }) => {
               key={pageNumber}
               className={getPageButtonClasses(pageNumber, selectedPage)}
             >
-              <a className="page-link" onClick={() => onPageClick(pageNumber)}>
+              <button
+                className="page-link"
+                onClick={() => onPageClick(pageNumber)}
+              >
                 {pageNumber}
-              </a>
+              </button>
             </li>
           );
         })}

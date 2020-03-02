@@ -178,7 +178,7 @@ export default class ShowMovies extends Component {
   };
 
   render() {
-    const { moviesCount, selectedPage, searchQuery } = this.state;
+    const { selectedPage, searchQuery } = this.state;
     const { user } = this.props;
 
     const {

@@ -2,32 +2,29 @@ import httpService from "./httpService";
 import jwtDecode from "jwt-decode";
 
 const apiEndpoint = "/auth";
+const tokenKey = "token";
 
-function set(jsonWebToken) {
-  localStorage.setItem("token", jsonWebToken);
-  httpService.setJsonWebToken(jsonWebToken);
-}
+httpService.setJsonWebToken(getJsonWebToken());
 
 export async function login(user) {
   const { data: jsonWebToken } = await httpService.post(apiEndpoint, {
     email: user.username,
     password: user.password
   });
-  set(jsonWebToken);
+  localStorage.setItem(tokenKey, jsonWebToken);
 }
 
 export function loginWithJsonWebToken(jsonWebToken) {
-  set(jsonWebToken);
+  localStorage.setItem(tokenKey, jsonWebToken);
 }
 
 export function logout() {
-  localStorage.removeItem("token");
-  httpService.setJsonWebToken(null);
+  localStorage.removeItem(tokenKey);
 }
 
 export function getCurrentUser() {
   try {
-    const jsonWebToken = localStorage.getItem("token");
+    const jsonWebToken = localStorage.getItem(tokenKey);
     return jsonWebToken ? jwtDecode(jsonWebToken) : null;
   } catch (error) {
     return null;
@@ -35,7 +32,7 @@ export function getCurrentUser() {
 }
 
 export function getJsonWebToken() {
-  return localStorage.getItem("token");
+  return localStorage.getItem(tokenKey);
 }
 
 export default {

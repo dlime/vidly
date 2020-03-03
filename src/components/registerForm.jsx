@@ -27,7 +27,7 @@ class RegisterForm extends Form {
     try {
       const response = await saveUser(this.state.data);
       // Login user after successfully creating it
-      auth.loginWithJsonWebToken(response.header["x-auth-token"]);
+      auth.loginWithJsonWebToken(response.headers["x-auth-token"]);
     } catch (error) {
       if (error.response && error.response.status === 400) {
         const errors = { ...this.state.errors };

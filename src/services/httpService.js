@@ -7,7 +7,7 @@ axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 
 function setJsonWebToken(jsonWebToken) {
   // Included in every http request, header will not be set when user is not logged in
-  axios.defaults.headers.common["x-auth-token"] = jsonWebToken;
+  axios.instance.defaults.headers.common["x-auth-token"] = jsonWebToken;
 }
 
 axios.interceptors.response.use(null, error => {

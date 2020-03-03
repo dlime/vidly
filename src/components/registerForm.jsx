@@ -24,7 +24,6 @@ class RegisterForm extends Form {
   });
 
   doSubmit = async () => {
-    console.log("DoSubmit1");
     try {
       const response = await saveUser(this.state.data);
       // Login user after successfully creating it

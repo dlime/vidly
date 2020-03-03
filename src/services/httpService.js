@@ -3,8 +3,6 @@ import { toast } from "react-toastify";
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 
-// axios.defaults.headers.common["access-control-expose-headers"] = "x-auth-token";
-
 function setJsonWebToken(jsonWebToken) {
   // Included in every http request, header will not be set when user is not logged in
   axios.instance.defaults.headers.common["x-auth-token"] = jsonWebToken;

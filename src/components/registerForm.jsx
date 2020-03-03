@@ -24,9 +24,11 @@ class RegisterForm extends Form {
   });
 
   doSubmit = async () => {
+    console.log("DoSubmit1");
     try {
       const response = await saveUser(this.state.data);
-      auth.loginJsonWithWebToken(response.headers["x-auth-token"]);
+      // Login user after successfully creating it
+      auth.loginWithJsonWebToken(response.header["x-auth-token"]);
     } catch (error) {
       if (error.response && error.response.status === 400) {
         const errors = { ...this.state.errors };
@@ -36,10 +38,11 @@ class RegisterForm extends Form {
       return;
     }
 
-    // this.props.history.replace("/");
-
     // Reload the page so that JWT is going to be taken
     // in App componentDidMount
+    // Wrong way:
+    // this.props.history.replace("/");
+    // Proper way:
     window.location = "/";
   };
 
